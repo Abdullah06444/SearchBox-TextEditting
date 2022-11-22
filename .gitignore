@@ -2,3 +2,10 @@
 html
 css
 javascript
+node_modules
+turkish_dictionary.txt
+turkish_misspellings.txt
+turkish_morphological_lexicon.txt
+turkish_finite_state_machine.xml
+penntreebank.txt
+src

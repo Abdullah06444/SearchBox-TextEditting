@@ -4,10 +4,13 @@ const { pool } = require('./dbConfig.js');
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
+
 const passport = require("passport");
 const initializePassport = require("./passportConfig.js");
-
 initializePassport(passport);
+
+const getSentence = require("./getSentence.js");
+const getMorphologicalAnalysis = require("./getMorphologicalAnalysis.js");
 
 const PORT = process.env.PORT || 4000;
 
@@ -23,9 +26,12 @@ app.use(session({
 }));
 
 app.use(passport.initialize());
+
 app.use(passport.session());
 
 app.use(flash());
+
+app.use("/src", express.static('src'));
 
 app.get('/', (req, res) => {
 
@@ -44,7 +50,12 @@ app.get('/users/register', checkAuthenticated, (req, res) => {
 
 app.get('/users/dashboard', checkNotAuthenticated, (req, res) => {
 
-    res.render("dashboard", { user : req.user.name })
+    res.render("dashboard", {
+        user : req.user.name,
+        email : req.user.email,
+        sentence : getSentence(),
+        fsm : getMorphologicalAnalysis(),
+    })
 });
 
 app.get('/users/logout', checkNotAuthenticated, (req, res, next) => {
@@ -122,8 +133,7 @@ app.post("/users/login", passport.authenticate("local", {
         successRedirect: "/users/dashboard",
         failureRedirect: "/users/login",
         failureFlash: true
-    })
-);
+}));
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
