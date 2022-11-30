@@ -19,15 +19,15 @@ initializePassport(passport);
 
 const getSentence = require("./nlptoolkit/getSentence.js");
 const getMorphologicalAnalysis = require("./nlptoolkit/getMorphologicalAnalysis.js");
-const getInvertedIndex = require("./nlptoolkit/informationRetrieval.js");
+const getInformationRetrieval = require("./nlptoolkit/informationRetrieval.js");
 const { localsName } = require('ejs');
 
 const PORT = process.env.PORT || 4000;
 
-console.log(__dirname)
-console.log(process.cwd())
-console.log(__filename)
-console.log(require('path').basename(__dirname))
+//console.log(__dirname)
+//console.log(process.cwd())
+//console.log(__filename)
+//console.log(require('path').basename(__dirname))
 
 
 
@@ -96,7 +96,7 @@ app.get('/users/dashboard/:linkAttachment', checkNotAuthenticated, (req, res) =>
         value : myQuery,
         platform : myPlatform,
         type : myRetrievalType,
-        invertedIndex : getInvertedIndex()
+        informationRetrieval : getInformationRetrieval()
     })
 });
 

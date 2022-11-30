@@ -1,128 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/images/yildiz.jpg" type="image">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <%- myCss.style %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dashboard</title>
-
-    <script type="text/javascript">
-        <% if (value != "...") { %>
-            console.log('<%- value %>')
-            <% var fsmParseList = fsm.morphologicalAnalysis(value) %>
-            <% for(var i=0; i< fsmParseList.size(); i++){ %>
-                console.log('<%- fsmParseList.getFsmParse(i).getFsmParseTransitionList() %>')
-            <% } %>
-        <% } %>
-        function fetchData(){
-            let query = document.getElementById("myQuery").value;
-            <% fsmParseList = fsm.morphologicalAnalysis("akın") %>
-            <% for(i=0; i< fsmParseList.size(); i++){ %>
-                console.log('<%- fsmParseList.getFsmParse(i).getFsmParseTransitionList() %>')
-            <% } %>
-            let emailvalue = '<%- email %>'
-            let sentencevalue = '<%- sentence %>'
-            console.log(emailvalue);
-            console.log(sentencevalue);
-            console.log('<%- sentence.getWord(1).getName() %>');
-        }
-        // prevent refresh page when click type="submit" button
-        /*$(document).ready(function(){
-            $("button").click(function(event){
-                event.preventDefault();
-            });
-        });*/
-    </script>
-</head>
-<body>
-
-    <!-- Navbar (sit on top) -->
-    <div class="w3-top w3-display-container w3-content w3-wide" style="max-width:1500px; position: fixed;">
-        <div class="w3-bar w3-white w3-wide w3-padding w3-card">
-            <a href="#home" class="w3-bar-item w3-button">Starlang</a>
-            <!-- Float links to the right. Hide them on small screens -->
-            <div class="w3-right w3-hide-small">
-                <a href="#searchbox" class="w3-bar-item w3-button">Search Box</a>
-                <a href="#texteditting" class="w3-bar-item w3-button">Text Editting</a>
-                <a href="#profil" class="w3-bar-item w3-button">Profil</a>
-                <a href="/users/logout" class="w3-bar-item w3-button">Logout</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="w3-display-container w3-content w3-wide" style="max-width:1500px; background: gainsboro;" id="home">
-        <img class="w3-image" src="https://starlangyazilim.com/wp-content/uploads/1280x800-Transparan-Logo-Beyaz-3.png" alt="Not Found" width="300" height="100">
-        <div class="w3-display-middle w3-margin-top w3-center">
-            <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>NLP</b></span> <span class="w3-hide-small w3-text-light-grey">Toolkit</span></h1>
-        </div>
-    </header>
-
-    <!-- Page content -->
-    <div class="w3-content w3-padding" style="max-width:1500px">
-        <h1>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %></h1>
-
-        <!-- SearchBox Section -->
-        <div class="w3-container w3-padding-32" id="searchbox">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Search Box</h3>
-        </div>
-
-        <div class="w3-row-padding w3-grayscale">
-            <form action="/users/dashboard" id="queryForm" method="post">
-                <div class="row height d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                        <div class="search">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control" id="myQuery" name="myQuery" placeholder="Query">
-                            <select class="btn btn-primary" id="myPlatform" name="myPlatform">
-                                <!-- <option value="0">Platform</option> -->
-                                <option value="1">Hepsiburada</option>
-                                <option value="2">Amazon</option>
-                                <option value="3">N11</option>
-                                <option value="4">Çiçeksepeti</option>
-                                <option value="5">Trendyol</option>
-                                <option value="6">Gittigidiyor</option>
-                            </select>
-                            <select class="btn btn-primary" id="myRetrievalType" name="myRetrievalType">
-                                <!-- <option value="0">Retrieval Type</option> -->
-                                <option value="1">Ranked</option>
-                                <option value="2">Positional</option>
-                                <option value="3">Boolean</option>
-                            </select>
-                            <!-- <select class="btn btn-primary" id="DocumentWeighting">
-                                <option value="0">Document Weighting</option>
-                                <option value="1">No IDF</option>
-                                <option value="2">IDF</option>
-                                <option value="3">Probabilistic IDF</option>
-                            </select> -->
-                            <!-- <select class="btn btn-primary" id="TermWeighting">
-                                <option value="0">Term Weighting</option>
-                                <option value="1">Natural</option>
-                                <option value="2">Logarithm</option>
-                                <option value="3">Boole</option>
-                            </select> -->
-                            <button type="submit" class="btn btn-primary" onclick="">Search</button>
-                        </div>
-                        <p class="w3-light-grey w3-block" style="text-align: center"><%= informationRetrieval.getTime() %> miliseconds</p>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="w3-row-padding">
             <% if (value != "...") { %>
-                
-                <!-- Hepsiburada e-commerce site -->
+                <% value = value.charAt(0).toLocaleUpperCase('tr') + value.substring(1,).toLocaleLowerCase('tr'); %>
                 <% if (platform == 1 && type == 1) { %>
-                    <% informationRetrieval.rankedIndexHepsiburada(value).forEach(each => { %>
+                    <% informationRetrieval.rankedIndexHepsiburada(value.forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
                         <img src="" alt="Not Found" style="width:100%">
                         <% if(each.length > 1) %>
@@ -160,7 +39,6 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- Amazon e-commerce site -->
                 <% if (platform == 2 && type == 1) { %>
                     <% informationRetrieval.rankedIndexAmazon(value).forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
@@ -200,7 +78,6 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- N11 e-commerce site -->
                 <% if (platform == 3 && type == 1) { %>
                     <% informationRetrieval.rankedIndexN11(value).forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
@@ -240,7 +117,6 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- Ciceksepeti e-commerce platform -->
                 <% if (platform == 4 && type == 1) { %>
                     <% informationRetrieval.rankedIndexCiceksepeti(value).forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
@@ -280,7 +156,6 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- Trendyol e-commerce site -->
                 <% if (platform == 5 && type == 1) { %>
                     <% informationRetrieval.rankedIndexTrendyol(value).forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
@@ -320,7 +195,6 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- Gittigidiyor e-commerce site -->
                 <% if (platform == 6 && type == 1) { %>
                     <% informationRetrieval.rankedIndexGittigidiyor(value).forEach(each => { %>
                         <div class="w3-col l3 m6 w3-margin-bottom">
@@ -360,67 +234,5 @@
                         </div>
                     <% }) %>
                 <% } %>
-                <!-- <p><button class="w3-button w3-light-grey w3-block">Load More</button></p> -->
+                <p><button class="w3-button w3-light-grey w3-block">Load More</button></p>
             <% } %>
-        </div>
-
-        <!-- TextEditting Section -->
-        <div class="w3-container w3-padding-32" id="texteditting">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text Editting</h3>
-        </div>
-
-        <div class="w3-row-padding w3-grayscale">
-            <form action="" method="post">
-                <div class="row height d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                        <div class="search">
-                            <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" style="width:100%; height:150vh;"></textarea>
-                            <button type="button" class="btn btn-primary" onclick="">Control</button>
-                            <button type="button" class="btn btn-primary" onclick="">Result</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <!-- Contact Section -->
-        <!--<div class="w3-container w3-padding-32" id="contact">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Contact</h3>
-            <p>Lets get in touch and talk about your next project.</p>
-            <form action="/action_page.php" target="_blank">
-                <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
-                <input class="w3-input w3-section w3-border" type="text" placeholder="Email" required name="Email">
-                <input class="w3-input w3-section w3-border" type="text" placeholder="Subject" required name="Subject">
-                <input class="w3-input w3-section w3-border" type="text" placeholder="Comment" required name="Comment">
-                <button class="w3-button w3-black w3-section" type="submit">
-                    <i class="fa fa-paper-plane"></i> SEND MESSAGE
-                </button>
-            </form>
-        </div>-->
-
-        <!-- Social media icons -->
-        <!--<div class="w3-container">
-        </div>-->
-
-        <!-- Profil Section -->
-        <div class="w3-container w3-padding-32" id="profil">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Profil Ayarları</h3>
-        </div>
-
-        <!-- End page content -->
-    </div>
-
-
-    <!-- Footer -->
-    <footer id="footer" class="w3-display-container w3-content w3-wide">
-        
-        <!-- Add font awesome icons -->
-        <a href="#" class="fa fa-facebook"></a>
-        <a href="#" class="fa fa-twitter"></a>
-        <a href="#" class="fa fa-google"></a>
-        <a href="#" class="fa fa-linkedin"></a>
-        <a href="#" class="fa fa-youtube"></a>
-        <a href="#" class="fa fa-instagram"></a>
-    </footer>
-</body>
-</html>
