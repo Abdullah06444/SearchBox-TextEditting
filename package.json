@@ -20,6 +20,7 @@
     "express-session": "^1.17.3",
     "nlptoolkit-corpus": "^1.0.9",
     "nlptoolkit-datastructure": "^1.0.4",
+    "nlptoolkit-deasciifier": "^1.0.3",
     "nlptoolkit-informationretrieval": "^1.0.5",
     "nlptoolkit-morphologicalanalysis": "^1.0.9",
     "nlptoolkit-morphologicaldisambiguation": "^1.0.1",
@@ -28,7 +29,9 @@
     "node-sass": "^8.0.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.8.0"
+    "pg": "^8.8.0",
+    "to": "^0.2.9",
+    "update": "^0.7.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",

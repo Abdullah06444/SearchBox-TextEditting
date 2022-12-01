@@ -1,34 +1,94 @@
-<script type="text/javascript">
+const getInformationRetrieval = require("../../nlptoolkit/informationRetrieval")
 
-        <% if (typeof value != 'undefined') { %>
+class DashboardClass{
 
-        console.log('<%- value %>')
-            <% var fsmParseList = fsm.morphologicalAnalysis(value) %>
-            <% for(var i=0; i< fsmParseList.size(); i++){ %>
-                console.log('<%- fsmParseList.getFsmParse(i).getFsmParseTransitionList() %>')
-            <% } %>
-        <% } %>
+    allRetrievalTypeCases(value, platform, type){
 
-        function fetchData(){
-            let query = document.getElementById("myQuery").value;
+        // Hepsiburada e-commerce site
+        if(value != "..." && platform == 1 && type == 1){
 
-            <% fsmParseList = fsm.morphologicalAnalysis("akın") %>
-            <% for(i=0; i< fsmParseList.size(); i++){ %>
-                console.log('<%- fsmParseList.getFsmParse(i).getFsmParseTransitionList() %>')
-            <% } %>
-
-            let emailvalue = '<%- email %>'
-            let sentencevalue = '<%- sentence %>'
-            console.log(emailvalue);
-            console.log(sentencevalue);
-
-            console.log('<%- sentence.getWord(1).getName() %>');
+            return getInformationRetrieval().rankedIndexHepsiburada(value);
         }
+        if(value != "..." && platform == 1 && type == 2){
 
-        // prevent refresh page when click type="submit" button
-        /*$(document).ready(function(){
-            $("button").click(function(event){
-                event.preventDefault();
-            });
-        });*/
-    </script>
+            return getInformationRetrieval().positionalIndexHepsiburada(value);
+        }
+        if(value != "..." && platform == 1 && type == 3){
+
+            return getInformationRetrieval().invertedIndexHepsiburada(value);
+        }
+        // Amazon e-commerce site
+        if(value != "..." && platform == 2 && type == 1){
+
+            return getInformationRetrieval().rankedIndexAmazon(value);
+        }
+        if(value != "..." && platform == 2 && type == 2){
+
+            return getInformationRetrieval().positionalIndexAmazon(value);
+        }
+        if(value != "..." && platform == 2 && type == 3){
+
+            return getInformationRetrieval().invertedIndexAmazon(value);
+        }
+        // N11 e-commerce site
+        if(value != "..." && platform == 3 && type == 1){
+
+            return getInformationRetrieval().rankedIndexN11(value);
+        }
+        if(value != "..." && platform == 3 && type == 2){
+
+            return getInformationRetrieval().positionalIndexN11(value);
+        }
+        if(value != "..." && platform == 3 && type == 3){
+
+            return getInformationRetrieval().invertedIndexN11(value);
+        }
+        // Ciceksepeti e-commerce site
+        if(value != "..." && platform == 4 && type == 1){
+
+            return getInformationRetrieval().rankedIndexCiceksepeti(value);
+        }
+        if(value != "..." && platform == 4 && type == 2){
+
+            return getInformationRetrieval().positionalIndexCiceksepeti(value);
+        }
+        if(value != "..." && platform == 4 && type == 3){
+
+            return getInformationRetrieval().invertedIndexCiceksepeti(value);
+        }
+        // Trendyol e-commerce site
+        if(value != "..." && platform == 5 && type == 1){
+
+            return getInformationRetrieval().rankedIndexTrendyol(value);
+        }
+        if(value != "..." && platform == 5 && type == 2){
+
+            return getInformationRetrieval().positionalIndexTrendyol(value);
+        }
+        if(value != "..." && platform == 5 && type == 3){
+
+            return getInformationRetrieval().invertedIndexTrendyol(value);
+        }
+        // Gittigidiyor e-commerce site
+        if(value != "..." && platform == 6 && type == 1){
+
+            return getInformationRetrieval().rankedIndexGittigidiyor(value);
+        }
+        if(value != "..." && platform == 6 && type == 2){
+
+            return getInformationRetrieval().positionalIndexGittigidiyor(value);
+        }
+        if(value != "..." && platform == 6 && type == 3){
+
+            return getInformationRetrieval().invertedIndexGittigidiyor(value);
+        }
+        return [];
+    }
+}
+
+function getDashboard(){
+
+    return new DashboardClass();
+}
+
+module.exports = getDashboard;

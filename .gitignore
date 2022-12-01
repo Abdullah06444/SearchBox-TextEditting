@@ -10,4 +10,8 @@ turkish_finite_state_machine.xml
 hepsiburada distinct.txt
 root_ngram.txt
 penntreebank.txt
+asciified-same.txt
+corpus.txt
+merged.txt
+split.txt
 src

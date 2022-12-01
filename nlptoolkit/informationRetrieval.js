@@ -515,6 +515,10 @@ class InformationRetrievalClass{
         return eachLine;
     }
 
+    /**
+     * 
+     * @returns get query time of any information retrieval indexes
+     */
     getTime(){
 
        return endTime-startTime; 

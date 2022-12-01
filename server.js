@@ -10,17 +10,19 @@ var path = require('path');
 app.set('views',path.join(__dirname + '/views'));
 //app.use('assets',express.static(path.join(__dirname, '/assets'))); 
 //app.use(express.static(__dirname + '/assets'))
-var myCss = { style : fs.readFileSync('./assets/style/dashboardStyle.css','utf-8') };
 
+// all definiing variable from assets folder
+var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
+const getDashboard = require("./assets/script/dashboardScript");
 
 const passport = require("passport");
 const initializePassport = require("./passportConfig.js");
 initializePassport(passport);
 
-const getSentence = require("./nlptoolkit/getSentence.js");
-const getMorphologicalAnalysis = require("./nlptoolkit/getMorphologicalAnalysis.js");
-const getInformationRetrieval = require("./nlptoolkit/informationRetrieval.js");
-const { localsName } = require('ejs');
+// all defining variables from nlptoolkit folder
+const getSentence = require("./nlptoolkit/corpus");
+const getInformationRetrieval = require("./nlptoolkit/informationRetrieval");
+const getNGramSpellChecker = require("./nlptoolkit/ngramSpellChecker");
 
 const PORT = process.env.PORT || 4000;
 
@@ -74,29 +76,32 @@ app.get('/users/register', checkAuthenticated, (req, res) => {
 
 app.get('/users/dashboard/:linkAttachment', checkNotAuthenticated, (req, res) => {
 
-    let str = req.params.linkAttachment.toString();
     let myQuery = "...", myPlatform = "...", myRetrievalType = "...";
-
-    if(str !== "..."){
-
-        myQuery = str.substring(str.indexOf("=")+1,str.indexOf(":"));
-        str = str.slice(str.indexOf(":")+1);
-        myPlatform = str.substring(str.indexOf("=")+1,str.indexOf(":"));
-        str = str.slice(str.indexOf(":")+1);
-        myRetrievalType = str.substring(str.indexOf("=")+1);    
-    }
+    let array = splitLinkAttachment(req.params.linkAttachment.toString());
+    if(array.length > 0)
+        myQuery = array[0];
+    if(array.length > 1)
+        myPlatform = array[1];
+    if(array.length > 2)
+        myRetrievalType = array[2];
+        
+    // ngram spell checker analysis metotunu cagirip query degistirildi
+    console.log("before : " + myQuery);
+    let array2 = getNGramSpellChecker().nGramSpellCheckerAnalysis(myQuery);
+    let sentence = getSentence().sentenceAnalysis(array2[1]);
+    sentence = getSentence().toCapital(sentence);
+    console.log("after : " + sentence.toWords());
 
     res.render("dashboard", {
-        user : req.user.name,
-        email : req.user.email,
+
+        userName : req.user.name,
         myCss : myCss,
-        sentence : getSentence(),
-        fsm : getMorphologicalAnalysis(),
-        
-        value : myQuery,
+        value : sentence.toWords(),
         platform : myPlatform,
         type : myRetrievalType,
-        informationRetrieval : getInformationRetrieval()
+        array2 : array2,
+        informationRetrieval : getInformationRetrieval(),
+        dashboard : getDashboard()
     })
 });
 
@@ -179,16 +184,16 @@ app.post("/users/login", passport.authenticate("local", {
 app.post("/users/dashboard", (req, res, next) => {
 
     let {myQuery, myPlatform, myRetrievalType} = req.body;
-    let array = [];
+    let warn = [];
     if(req.body.myQuery !== '') myQuery = req.body.myQuery; else myQuery = "...";
-    if(req.body.myPlatform !== '') myPlatform = req.body.myPlatform; else array.push({ message : "Select Platform" });
-    if(req.body.myRetrievalType !== '') myRetrievalType = req.body.myRetrievalType; else array.push({ message : "Select RetrievalType" });
-    //myQuery = myQuery.toString().toLocaleLowerCase("tr");
-    console.log({ myQuery, myPlatform, myRetrievalType });
-    if(array.length !== 0){
+    if(req.body.myPlatform !== '') myPlatform = req.body.myPlatform; else warn.push({ message : "Select Platform" });
+    if(req.body.myRetrievalType !== '') myRetrievalType = req.body.myRetrievalType; else warn.push({ message : "Select RetrievalType" });
 
-        console.log({ array });
-        res.render("dashboard", { array });
+    console.log({ myQuery, myPlatform, myRetrievalType });
+    if(warn.length !== 0){
+
+        console.log({ warn });
+        res.render("dashboard", { warn });
     } else {
 
         //history.pushState("","","/users/dashboard/" + myQuery);
@@ -206,10 +211,35 @@ function checkAuthenticated(req, res, next) {
 }
 
 function checkNotAuthenticated(req, res, next) {
+    
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect("/users/login");
+}
+
+function splitLinkAttachment(linkAttachment){
+
+    let array = [];
+    if(linkAttachment !== "..."){
+
+        let i = 0;
+        while(linkAttachment !== ""){
+            
+            //console.log("link : " + linkAttachment);  
+            
+            if(linkAttachment.includes(":"))
+                array[i] = linkAttachment.substring(linkAttachment.indexOf("=")+1,linkAttachment.indexOf(":"));
+            else{ // last index of array
+                array[i] = linkAttachment.substring(linkAttachment.indexOf("=")+1);
+                break;
+            }
+
+            linkAttachment = linkAttachment.slice(linkAttachment.indexOf(":")+1);
+            i++;
+        }
+    }
+    return array;
 }
 
 app.listen(PORT, () =>{
