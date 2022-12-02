@@ -22,9 +22,9 @@ class SentenceClass{
         for(let i=0; i<sentence.wordCount(); i++){
 
             let word = sentence.getWord(i).getName();
-            console.log(word);
+            //console.log(word);
             sentence.getWord(i).setName(word.substring(0,1).toLocaleUpperCase("tr") + word.slice(1).toLocaleLowerCase("tr"));
-            console.log(sentence.getWord(i).getName());
+            //console.log(sentence.getWord(i).getName());
         }
         return sentence;
     }

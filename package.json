@@ -21,7 +21,7 @@
     "nlptoolkit-corpus": "^1.0.9",
     "nlptoolkit-datastructure": "^1.0.4",
     "nlptoolkit-deasciifier": "^1.0.3",
-    "nlptoolkit-informationretrieval": "^1.0.5",
+    "nlptoolkit-informationretrieval": "^1.0.6",
     "nlptoolkit-morphologicalanalysis": "^1.0.9",
     "nlptoolkit-morphologicaldisambiguation": "^1.0.1",
     "nlptoolkit-ngram": "^1.0.2",

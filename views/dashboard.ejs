@@ -108,14 +108,15 @@
         <div class="w3-row-padding">
             <% array.forEach(each => { %>
                 <div class="w3-col l3 m6 w3-margin-bottom">
-                    <% if(each.length > 0 && platform != 6) %>
+                    <% if(each.length > 0 && platform != 6){ %>
                     <img src="" alt="Not Found" style="width:100%">
-                    <% if(each.length > 1) %>
+                    <% } if(each.length > 1){ %>
                     <h3 class="title"><%= each[1] %></h3>
-                    <% if(each.length > 0) %>
+                    <% } if(each.length > 0){ %>
                     <p class="w3-opacity hierarchy"><%= each[0] %></p>
-                    <% if(each.length > 2) %>
+                    <% } if(each.length > 2){ %>
                     <p class="description"><%= each[2] %></p>
+                    <% } %>
                 </div>
             <% }) %>
             <!-- <% if(array.length > 0) %>
@@ -173,9 +174,7 @@
     <footer id="footer" class="w3-display-container w3-content w3-wide">
         
         <!-- Add font awesome icons -->
-        <a href="#" class="fa fa-facebook"></a>
         <a href="#" class="fa fa-twitter"></a>
-        <a href="#" class="fa fa-google"></a>
         <a href="#" class="fa fa-linkedin"></a>
         <a href="#" class="fa fa-youtube"></a>
         <a href="#" class="fa fa-instagram"></a>
