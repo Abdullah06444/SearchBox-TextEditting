@@ -94,6 +94,7 @@
                                 <option value="2">Logarithm</option>
                                 <option value="3">Boole</option>
                             </select> -->
+                            <input type="number" style="width: 100px;" value="8" min="0" max="100">
                             <button type="submit" class="btn btn-primary" onclick="">Search</button>
                         </div>
                         <!-- display calculating tne query time -->
@@ -109,18 +110,24 @@
             <% array.forEach(each => { %>
                 <div class="w3-col l3 m6 w3-margin-bottom">
                     <% if(each.length > 0 && platform != 6){ %>
-                    <img src="" alt="Not Found" style="width:100%">
+                        <div id="image">
+                        <img alt="Not Found" style="width:100%">
+                        </div>
                     <% } if(each.length > 1){ %>
-                    <h3 class="title"><%= each[1] %></h3>
+                        <h3 class="title"><%= each[1] %></h3>
                     <% } if(each.length > 0){ %>
-                    <p class="w3-opacity hierarchy"><%= each[0] %></p>
+                        <p class="w3-opacity hierarchy"><%= each[0] %></p>
                     <% } if(each.length > 2){ %>
-                    <p class="description"><%= each[2] %></p>
+                        <p class="description"><%= each[2] %></p>
                     <% } %>
                 </div>
             <% }) %>
-            <!-- <% if(array.length > 0) %>
-                 <p><button class="w3-button w3-light-grey w3-block">Load More</button></p> -->
+            <!-- <% if(array.length > 0){ %>
+                 <p><button class="w3-button w3-light-grey w3-block">Load More</button></p>
+                 <% } %> -->
+<script type="text/javascript">
+    document.getElementById("image").innerHTML = '<% dashboard.getArrayOfProductInfo(array[0], platform) %>' 
+</script>
         </div>
 
         <!-- TextEditting Section -->

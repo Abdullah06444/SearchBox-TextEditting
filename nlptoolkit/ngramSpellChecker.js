@@ -7,6 +7,7 @@ const { NGramSpellChecker } = require('nlptoolkit-spellchecker/dist/NGramSpellCh
 const { SpellCheckerParameter } = require('nlptoolkit-spellchecker/dist/SpellCheckerParameter');
 const { Sentence } = require('nlptoolkit-corpus/dist/Sentence');
 
+'use strict';
 var fs = require('fs');
 let turkishSplitter = new TurkishSplitter();
 let fsmMorphologicalAnalyzer = new FsmMorphologicalAnalyzer();
