@@ -30,9 +30,11 @@
     "nlptoolkit-ngram": "^1.0.2",
     "nlptoolkit-spellchecker": "^1.0.4",
     "node-sass": "^8.0.0",
+    "node-sessionstorage": "^1.0.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pg": "^8.8.0",
+    "swup": "^2.0.19",
     "to": "^0.2.9",
     "update": "^0.7.4",
     "xhr2": "^0.2.1"

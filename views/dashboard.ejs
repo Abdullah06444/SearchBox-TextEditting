@@ -11,6 +11,7 @@
     <%- myCss.style %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/swup@latest/dist/swup.min.js"></script> 
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard</title>
 
@@ -44,7 +45,12 @@
     <header class="w3-display-container w3-content w3-wide" style="max-width:1500px; background: gainsboro;" id="home">
         <img class="w3-image" src="https://starlangyazilim.com/wp-content/uploads/1280x800-Transparan-Logo-Beyaz-3.png" alt="Not Found" width="300" height="100">
         <div class="w3-display-middle w3-margin-top w3-center">
-            <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>NLP</b></span> <span class="w3-hide-small w3-text-light-grey">Toolkit</span></h1>
+            <h1 class="w3-xxlarge w3-text-white">
+                <span class="w3-padding w3-black w3-opacity-min">
+                    <b>NLP</b>
+                </span>
+                <span class="w3-hide-small w3-text-light-grey">Toolkit</span>
+            </h1>
         </div>
     </header>
 
@@ -125,9 +131,9 @@
             <!-- <% if(array.length > 0){ %>
                  <p><button class="w3-button w3-light-grey w3-block">Load More</button></p>
                  <% } %> -->
-<script type="text/javascript">
-    document.getElementById("image").innerHTML = '<% dashboard.getArrayOfProductInfo(array[0], platform) %>' 
-</script>
+<!-- <script type="text/javascript">
+    document.getElementById("image").innerHTML = "dashboard.getArrayOfProductInfo(array[0], platform)"
+</script> -->
         </div>
 
         <!-- TextEditting Section -->
@@ -135,14 +141,45 @@
             <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text Editting</h3>
         </div>
 
-        <div class="w3-row-padding w3-grayscale">
+        <div class="w3-row-padding w3-grayscale transition-fade" id="secondPage">
             <form action="" method="post">
                 <div class="row height d-flex justify-content-center align-items-center">
                     <div class="col-md-8">
                         <div class="search">
+                            <select class="btn btn-primary" id="myDomain" name="myDomain" 
+                            style="margin-left: auto; margin-right: auto; display: block;">
+                                <option value="0">Select Domain</option>
+                                <option value="1">Aile</option>
+                                <option value="2">Akademik</option>
+                                <option value="3">Arkeoloji</option>
+                                <option value="4">Astroloji</option>
+                                <option value="5">Bilim</option>
+                                <option value="6">Bilim-Teknoloji</option>
+                                <option value="7">Eğitim</option>
+                                <option value="8">Eğlence</option>
+                                <option value="9">Ekonomi</option>
+                                <option value="10">Ev Tasarımı</option>
+                                <option value="11">Gaming</option>
+                                <option value="12">Güzellik ve Moda</option>
+                                <option value="13">İlişkiler</option>
+                                <option value="14">İş ve Ticaret</option>
+                                <option value="15">Kişisel Gelişim</option>
+                                <option value="16">Lifestyle</option>
+                                <option value="17">Pazarlama</option>
+                                <option value="18">Politika</option>
+                                <option value="19">Pop Kültür</option>
+                                <option value="20">Psikoloji</option>
+                                <option value="21">Sağlık</option>
+                                <option value="22">Seyahat</option>
+                                <option value="23">Spor</option>
+                                <option value="24">Tasarım ve Geliştirme</option>
+                                <option value="25">Teknoloji</option>
+                                <option value="26">Workout Önerileri</option>
+                                <option value="27">Yemek-İçecek</option>
+                                <option value="28">Yerel Haberler</option>
+                            </select>
                             <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" style="width:100%; height:150vh;"></textarea>
-                            <button type="button" class="btn btn-primary" onclick="">Control</button>
-                            <button type="button" class="btn btn-primary" onclick="">Result</button>
+                            <button type="button" class="btn btn-primary" onclick="" style="margin-left: auto; margin-right: auto; display: block">Control</button>
                         </div>
                     </div>
                 </div>
@@ -186,5 +223,6 @@
         <a href="#" class="fa fa-youtube"></a>
         <a href="#" class="fa fa-instagram"></a>
     </footer>
+
 </body>
 </html>

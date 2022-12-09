@@ -11,18 +11,20 @@ app.set('views',path.join(__dirname + '/views'));
 //app.use('assets',express.static(path.join(__dirname, '/assets'))); 
 //app.use(express.static(__dirname + '/assets'))
 
-// all definiing variable from assets folder
-var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
-const getDashboard = require("./assets/script/dashboardScript");
-
 const passport = require("passport");
 const initializePassport = require("./passportConfig.js");
 initializePassport(passport);
+
+
 
 // all defining variables from nlptoolkit folder
 const getSentence = require("./nlptoolkit/corpus");
 const getInformationRetrieval = require("./nlptoolkit/informationRetrieval");
 const getNGramSpellChecker = require("./nlptoolkit/ngramSpellChecker");
+
+// all definiing variable from assets folder
+var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
+const getDashboard = require("./assets/script/dashboardScript");
 
 const PORT = process.env.PORT || 4000;
 
@@ -31,7 +33,7 @@ const PORT = process.env.PORT || 4000;
 //console.log(__filename)
 //console.log(require('path').basename(__dirname))
 
-
+const storage = require('node-sessionstorage')
 
 app.set('view engine', "ejs");
 
@@ -74,10 +76,13 @@ app.get('/users/register', checkAuthenticated, (req, res) => {
     })
 });
 
-app.get('/users/dashboard/:linkAttachment', checkNotAuthenticated, (req, res) => {
+app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
 
     let myQuery = "...", myPlatform = "...", myRetrievalType = "...";
-    let array = splitLinkAttachment(req.params.linkAttachment.toString());
+    //console.log(storage.getItem("mySearchBoxQuery"))
+    let array = [];
+    if(storage.getItem("mySearchBoxQuery") != undefined)
+        array = splitLinkAttachment(storage.getItem("mySearchBoxQuery").toString());
     if(array.length > 0)
         myQuery = array[0];
     if(array.length > 1)
@@ -176,7 +181,7 @@ app.post('/users/register', async (req, res) => {
 });
 
 app.post("/users/login", passport.authenticate("local", {
-    successRedirect: "/users/dashboard/...",
+    successRedirect: "/users/dashboard/",
     failureRedirect: "/users/login",
     failureFlash: true
 }));
@@ -185,7 +190,7 @@ app.post("/users/dashboard", (req, res, next) => {
 
     let {myQuery, myPlatform, myRetrievalType} = req.body;
     let warn = [];
-    if(req.body.myQuery !== '') myQuery = req.body.myQuery; else myQuery = "...";
+    if(req.body.myQuery !== '') myQuery = req.body.myQuery; else warn.push({ message : "Enter Query" });
     if(req.body.myPlatform !== '') myPlatform = req.body.myPlatform; else warn.push({ message : "Select Platform" });
     if(req.body.myRetrievalType !== '') myRetrievalType = req.body.myRetrievalType; else warn.push({ message : "Select RetrievalType" });
 
@@ -196,16 +201,16 @@ app.post("/users/dashboard", (req, res, next) => {
         res.render("dashboard", { warn });
     } else {
 
-        //history.pushState("","","/users/dashboard/" + myQuery);
-        let linkAttachment = "query=" + myQuery + ":platform=" + myPlatform + ":type=" + myRetrievalType;
-        if(req.body.myQuery !== '') myQuery = req.body.myQuery; else linkAttachment = "...";
-        res.redirect("/users/dashboard/" + linkAttachment);
+        let searchBoxQuery = "query=" + myQuery + ":platform=" + myPlatform + ":type=" + myRetrievalType;
+        if(req.body.myQuery !== '') myQuery = req.body.myQuery;
+        storage.setItem("mySearchBoxQuery", searchBoxQuery)
+        res.redirect("/users/dashboard/");
     }
 });
 
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-        return res.redirect("/users/dashboard/...");
+        return res.redirect("/users/dashboard/");
     }
     next();
 }
@@ -218,24 +223,24 @@ function checkNotAuthenticated(req, res, next) {
     res.redirect("/users/login");
 }
 
-function splitLinkAttachment(linkAttachment){
+function splitLinkAttachment(sessionStorageItem){
 
     let array = [];
-    if(linkAttachment !== "..."){
+    if(sessionStorageItem !== "..."){
 
         let i = 0;
-        while(linkAttachment !== ""){
+        while(sessionStorageItem !== ""){
             
-            //console.log("link : " + linkAttachment);  
+            console.log("link : " + sessionStorageItem);  
             
-            if(linkAttachment.includes(":"))
-                array[i] = linkAttachment.substring(linkAttachment.indexOf("=")+1,linkAttachment.indexOf(":"));
+            if(sessionStorageItem.includes(":"))
+                array[i] = sessionStorageItem.substring(sessionStorageItem.indexOf("=")+1,sessionStorageItem.indexOf(":"));
             else{ // last index of array
-                array[i] = linkAttachment.substring(linkAttachment.indexOf("=")+1);
+                array[i] = sessionStorageItem.substring(sessionStorageItem.indexOf("=")+1);
                 break;
             }
 
-            linkAttachment = linkAttachment.slice(linkAttachment.indexOf(":")+1);
+            sessionStorageItem = sessionStorageItem.slice(sessionStorageItem.indexOf(":")+1);
             i++;
         }
     }
@@ -246,9 +251,3 @@ app.listen(PORT, () =>{
 
     console.log('Server running on port ' + PORT);
 });
-
-/*
-    "//@types/dom-parser": "^0.1.1",
-    "//xhr2": "^0.2.1",
-    "//xmlhttprequest": "^1.8.0"
- */

@@ -10,8 +10,6 @@ const getInformationRetrieval = require("../../nlptoolkit/informationRetrieval")
 //const { DomParser } = require("dom-parser").DomParser;
 //var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-var request = new XMLHttpRequest();
-var parser = new DOMParser();
 
 //var jsdom = require("jsdom");
 
@@ -102,6 +100,9 @@ class DashboardClass{
 
     getArrayOfProductInfo(arrayOfProductInfo, platform){
         
+        var request = new XMLHttpRequest();
+        var parser = new DOMParser();
+
         request.onreadystatechange = function() {
             console.log("readyState " + request.readyState + " status " + request.status)
             
