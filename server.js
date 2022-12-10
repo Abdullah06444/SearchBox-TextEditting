@@ -15,16 +15,18 @@ const passport = require("passport");
 const initializePassport = require("./passportConfig.js");
 initializePassport(passport);
 
-
-
 // all defining variables from nlptoolkit folder
 const getSentence = require("./nlptoolkit/corpus");
 const getInformationRetrieval = require("./nlptoolkit/informationRetrieval");
 const getNGramSpellChecker = require("./nlptoolkit/ngramSpellChecker");
 
 // all definiing variable from assets folder
-var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
+// var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
 const getDashboard = require("./assets/script/dashboardScript");
+
+
+
+const storage = require('node-sessionstorage');
 
 const PORT = process.env.PORT || 4000;
 
@@ -33,7 +35,6 @@ const PORT = process.env.PORT || 4000;
 //console.log(__filename)
 //console.log(require('path').basename(__dirname))
 
-const storage = require('node-sessionstorage')
 
 app.set('view engine', "ejs");
 
@@ -57,28 +58,22 @@ app.use(flash());
 app.get('/', (req, res) => {
 
     //res.status(200).send('<h1>Welcome</h1>');
-    res.render("index", {
-        myCss : myCss
-    });
+    res.render("index");
 });
 
 app.get('/users/login', checkAuthenticated, (req, res) => {
 
-    res.render("login", {
-        myCss : myCss
-    })
+    res.render("login")
 });
 
 app.get('/users/register', checkAuthenticated, (req, res) => {
 
-    res.render("register", {
-        myCss : myCss
-    })
+    res.render("register")
 });
 
 app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
 
-    let myQuery = "...", myPlatform = "...", myRetrievalType = "...";
+    let myQuery = undefined, myPlatform = undefined, myRetrievalType = undefined;
     //console.log(storage.getItem("mySearchBoxQuery"))
     let array = [];
     if(storage.getItem("mySearchBoxQuery") != undefined)
@@ -92,16 +87,20 @@ app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
         
     // ngram spell checker analysis metotunu cagirip query degistirildi
     console.log("before : " + myQuery);
-    let array2 = getNGramSpellChecker().nGramSpellCheckerAnalysis(myQuery);
-    let sentence = getSentence().sentenceAnalysis(array2[1]);
-    sentence = getSentence().toCapital(sentence);
-    console.log("after : " + sentence.toWords());
+    let array2 = [];
+    let value = "";
+    if(myQuery !== undefined){
+        array2 = getNGramSpellChecker().nGramSpellCheckerAnalysis(myQuery);
+        let sentence = getSentence().sentenceAnalysis(array2[1]);
+        sentence = getSentence().toCapital(sentence);
+        console.log("after : " + sentence.toWords());
+        value = sentence.toWords();
+    }
 
     res.render("dashboard", {
 
         userName : req.user.name,
-        myCss : myCss,
-        value : sentence.toWords(),
+        value : value,
         platform : myPlatform,
         type : myRetrievalType,
         array2 : array2,
@@ -109,6 +108,14 @@ app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
         dashboard : getDashboard()
     })
 });
+
+app.get('/users/dashboard2/', checkNotAuthenticated, (req, res) => {
+
+    res.render("dashboard", { 
+        
+        userName : req.user.name
+    });
+})
 
 app.get('/users/logout', checkNotAuthenticated, (req, res, next) => {
 
@@ -136,7 +143,7 @@ app.post('/users/register', async (req, res) => {
     }
 
     if (password.length < 6) {
-        errors.push({message: "Password must be a least 6 characters long"});
+        errors.push({message: "Password must be at least 6 characters long"});
     }
 
     if (password !== password2) {
@@ -160,9 +167,7 @@ app.post('/users/register', async (req, res) => {
 
                 if (results.rows.length > 0) {
                     console.log("Email already registered");
-                    return res.render("register", {
-                        message: "Email already registered"
-                    });
+                    res.render("register", {message: "Email already registered"});
                 } else {
                     pool.query(
                         "insert into users (\"name\",\"email\",\"password\") values ('"+ req.body.name +"','"+ req.body.email +"','"+ hashedPassword +"') returning \"id\", \"password\"", (err, results) => {
@@ -189,22 +194,58 @@ app.post("/users/login", passport.authenticate("local", {
 app.post("/users/dashboard", (req, res, next) => {
 
     let {myQuery, myPlatform, myRetrievalType} = req.body;
-    let warn = [];
-    if(req.body.myQuery !== '') myQuery = req.body.myQuery; else warn.push({ message : "Enter Query" });
-    if(req.body.myPlatform !== '') myPlatform = req.body.myPlatform; else warn.push({ message : "Select Platform" });
-    if(req.body.myRetrievalType !== '') myRetrievalType = req.body.myRetrievalType; else warn.push({ message : "Select RetrievalType" });
+    let errors = [];
+    if(req.body.myQuery === "") errors.push({ message : "Enter Query!" });
+    if(req.body.myPlatform === '0') errors.push({ message : "Select Platform!" });
+    if(req.body.myRetrievalType === '0') errors.push({ message : "Select RetrievalType!" });
 
     console.log({ myQuery, myPlatform, myRetrievalType });
-    if(warn.length !== 0){
+    if(errors.length > 0){
 
-        console.log({ warn });
-        res.render("dashboard", { warn });
+        console.log({ errors : errors });
+        res.render("dashboard", { 
+            
+            errors : errors,
+            userName : req.user.name
+        });
+
     } else {
 
         let searchBoxQuery = "query=" + myQuery + ":platform=" + myPlatform + ":type=" + myRetrievalType;
         if(req.body.myQuery !== '') myQuery = req.body.myQuery;
         storage.setItem("mySearchBoxQuery", searchBoxQuery)
+        
         res.redirect("/users/dashboard/");
+    }
+});
+
+app.post("/users/dashboard2", (req, res) => {
+
+    let {myDomain, myTextArea} = req.body;
+
+    let errors = [];
+    if(myDomain === '0') errors.push({ message : "Select Domain!" });
+    if(myTextArea === "") errors.push({ message : "Write Something!" });
+    
+    console.log({myDomain, myTextArea});
+    if(errors.length > 0){
+
+        console.log({ errors : errors });
+        res.render("dashboard", { 
+            
+            errors : errors,
+            userName : req.user.name
+        });
+
+    } else {
+
+        let textAreaBlog = "domain=" + myDomain + ":text=" + myTextArea;
+        if(req.body.myQuery !== '') myQuery = req.body.myQuery;
+        storage.setItem("myTextAreaBlog", textAreaBlog)
+        
+        console.log("girmiş => " + storage.getItem("myTextAreaBlog"))
+        
+        //res.redirect("/users/dashboard/");
     }
 });
 
@@ -231,7 +272,7 @@ function splitLinkAttachment(sessionStorageItem){
         let i = 0;
         while(sessionStorageItem !== ""){
             
-            console.log("link : " + sessionStorageItem);  
+            console.log("storage : " + sessionStorageItem);  
             
             if(sessionStorageItem.includes(":"))
                 array[i] = sessionStorageItem.substring(sessionStorageItem.indexOf("=")+1,sessionStorageItem.indexOf(":"));
@@ -245,6 +286,26 @@ function splitLinkAttachment(sessionStorageItem){
         }
     }
     return array;
+}
+
+function getTextArea(){
+
+    //var document = new Document();
+    // prevent refresh page when click type="submit" button
+    document.ready(function(){
+        document.getElementsByClassName("btn btn-primary").click(function(event){
+            event.preventDefault();
+        });
+    });
+
+    let textArea = document.getElementById("myTextArea")
+    document.onkeydown = function(e){
+        e = e || window.event;
+        var key = e.UIEvent.which || e.KeyboardEvent.keyCode;
+        if(key === 32){
+            console.log(textArea.value);
+        }
+    }
 }
 
 app.listen(PORT, () =>{

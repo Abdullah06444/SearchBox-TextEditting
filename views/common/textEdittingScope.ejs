@@ -1,0 +1,75 @@
+<div class="w3-container w3-padding-32" id="texteditting">
+    <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text Editting</h3>
+</div>
+
+<div class="w3-row-padding w3-grayscale transition-fade">
+    <ul>
+        <% if (typeof errors != 'undefined') { %>
+            <% errors.forEach(error => { %>
+                <li><%= error.message %></li>
+            <% }) %>
+        <% } %>
+    </ul>
+    <form action="/users/dashboard2" id="textAreaForm" method="post"
+    onkeyup="if(event.keyCode == 32) this.submit(); return false;">
+        <div class="row height d-flex justify-content-center align-items-center">
+            <div class="col-md-8">
+                <div class="search">
+                    <select class="btn btn-primary" id="myDomain" name="myDomain" 
+                    style="margin-left: auto; margin-right: auto; display: block;">
+                        <!-- <option value="0">Select Domain</option> -->
+                        <option value="1">Aile</option>
+                        <option value="2">Akademik</option>
+                        <option value="3">Arkeoloji</option>
+                        <option value="4">Astroloji</option>
+                        <option value="5">Bilim</option>
+                        <option value="6">Bilim-Teknoloji</option>
+                        <option value="7">Eğitim</option>
+                        <option value="8">Eğlence</option>
+                        <option value="9">Ekonomi</option>
+                        <option value="10">Ev Tasarımı</option>
+                        <option value="11">Gaming</option>
+                        <option value="12">Güzellik ve Moda</option>
+                        <option value="13">İlişkiler</option>
+                        <option value="14">İş ve Ticaret</option>
+                        <option value="15">Kişisel Gelişim</option>
+                        <option value="16">Lifestyle</option>
+                        <option value="17">Pazarlama</option>
+                        <option value="18">Politika</option>
+                        <option value="19">Pop Kültür</option>
+                        <option value="20">Psikoloji</option>
+                        <option value="21">Sağlık</option>
+                        <option value="22">Seyahat</option>
+                        <option value="23">Spor</option>
+                        <option value="24">Tasarım ve Geliştirme</option>
+                        <option value="25">Teknoloji</option>
+                        <option value="26">Workout Önerileri</option>
+                        <option value="27">Yemek-İçecek</option>
+                        <option value="28">Yerel Haberler</option>
+                    </select>
+                    <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" style="width: 100%; height: 10vh;"></textarea>
+                    <button type="submit" class="btn btn-primary" onclick="" style="margin-left: auto; margin-right: auto; display: block">Control</button>
+                    <% if(typeof storage != 'undefined'){ %>
+                        <div id="textResult"><%= storage %></div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+
+    // document.onkeyup = function(e){
+
+    //     e = e || window.event;
+    //     var key = e.which || e.keyCode;
+    //     if(key === 32){
+
+    //         console.log(document.getElementById("myTextArea").value);
+    //         sessionStorage.setItem("text",document.getElementById("myTextArea").value)
+
+    //         document.getElementById("textResult").innerHTML = textResult;
+   
+    // }
+</script>

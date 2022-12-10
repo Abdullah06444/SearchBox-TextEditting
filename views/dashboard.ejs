@@ -1,28 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../assets/images/yildiz.jpg" type="image">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <%- myCss.style %>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/swup@latest/dist/swup.min.js"></script> 
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <%- include("./common/headScope") %>
     <title>Dashboard</title>
 
     <script type="text/javascript">
         
         // prevent refresh page when click type="submit" button
-        /*$(document).ready(function(){
-            $("button").click(function(event){
-                event.preventDefault();
-            });
-        });*/
+        // $(document).ready(function(){
+        //     $("button").click(function(event){
+        //         event.preventDefault();
+        //     });
+        // });
     </script>
 </head>
 <body>
@@ -59,132 +48,12 @@
         <h1>Hello <%= userName.charAt(0).toUpperCase() + userName.slice(1) %></h1>
 
         <!-- SearchBox Section -->
-        <div class="w3-container w3-padding-32" id="searchbox">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Search Box</h3>
-        </div>
-
-<!-- get all cases method before display the user interface because of calculating the query time -->
-<% var array = dashboard.allRetrievalTypeCases(value, platform, type) %>
-
-        <div class="w3-row-padding w3-grayscale">
-            <form action="/users/dashboard" id="queryForm" method="post">
-                <div class="row height d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                        <div class="search">
-                            <i class="fa fa-search"></i>
-                            <input type="text" class="form-control" id="myQuery" name="myQuery" placeholder="Query">
-                            <select class="btn btn-primary" id="myPlatform" name="myPlatform">
-                                <!-- <option value="0">Platform</option> -->
-                                <option value="1">Hepsiburada</option>
-                                <option value="2">Amazon</option>
-                                <option value="3">N11</option>
-                                <option value="4">Çiçeksepeti</option>
-                                <option value="5">Trendyol</option>
-                                <option value="6">Gittigidiyor</option>
-                            </select>
-                            <select class="btn btn-primary" id="myRetrievalType" name="myRetrievalType">
-                                <!-- <option value="0">Retrieval Type</option> -->
-                                <option value="1">Ranked</option>
-                                <option value="2">Positional</option>
-                                <option value="3">Boolean</option>
-                            </select>
-                            <!-- <select class="btn btn-primary" id="DocumentWeighting">
-                                <option value="0">Document Weighting</option>
-                                <option value="1">No IDF</option>
-                                <option value="2">IDF</option>
-                                <option value="3">Probabilistic IDF</option>
-                            </select> -->
-                            <!-- <select class="btn btn-primary" id="TermWeighting">
-                                <option value="0">Term Weighting</option>
-                                <option value="1">Natural</option>
-                                <option value="2">Logarithm</option>
-                                <option value="3">Boole</option>
-                            </select> -->
-                            <input type="number" style="width: 100px;" value="8" min="0" max="100">
-                            <button type="submit" class="btn btn-primary" onclick="">Search</button>
-                        </div>
-                        <!-- display calculating tne query time -->
-                        <p class="w3-light-grey w3-block" style="text-align: center"><%= informationRetrieval.getTime() %> miliseconds</p>
-                        <p class="w3-opacity" style="text-align: center">before the analyze => <%= array2[0] %></p>
-                        <p style="text-align: center">after the analyze => <%= array2[1] %></p>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="w3-row-padding">
-            <% array.forEach(each => { %>
-                <div class="w3-col l3 m6 w3-margin-bottom">
-                    <% if(each.length > 0 && platform != 6){ %>
-                        <div id="image">
-                        <img alt="Not Found" style="width:100%">
-                        </div>
-                    <% } if(each.length > 1){ %>
-                        <h3 class="title"><%= each[1] %></h3>
-                    <% } if(each.length > 0){ %>
-                        <p class="w3-opacity hierarchy"><%= each[0] %></p>
-                    <% } if(each.length > 2){ %>
-                        <p class="description"><%= each[2] %></p>
-                    <% } %>
-                </div>
-            <% }) %>
-            <!-- <% if(array.length > 0){ %>
-                 <p><button class="w3-button w3-light-grey w3-block">Load More</button></p>
-                 <% } %> -->
-<!-- <script type="text/javascript">
-    document.getElementById("image").innerHTML = "dashboard.getArrayOfProductInfo(array[0], platform)"
-</script> -->
-        </div>
+        <%- include("./common/searchBoxScope") %>
 
         <!-- TextEditting Section -->
-        <div class="w3-container w3-padding-32" id="texteditting">
-            <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text Editting</h3>
-        </div>
-
-        <div class="w3-row-padding w3-grayscale transition-fade" id="secondPage">
-            <form action="" method="post">
-                <div class="row height d-flex justify-content-center align-items-center">
-                    <div class="col-md-8">
-                        <div class="search">
-                            <select class="btn btn-primary" id="myDomain" name="myDomain" 
-                            style="margin-left: auto; margin-right: auto; display: block;">
-                                <option value="0">Select Domain</option>
-                                <option value="1">Aile</option>
-                                <option value="2">Akademik</option>
-                                <option value="3">Arkeoloji</option>
-                                <option value="4">Astroloji</option>
-                                <option value="5">Bilim</option>
-                                <option value="6">Bilim-Teknoloji</option>
-                                <option value="7">Eğitim</option>
-                                <option value="8">Eğlence</option>
-                                <option value="9">Ekonomi</option>
-                                <option value="10">Ev Tasarımı</option>
-                                <option value="11">Gaming</option>
-                                <option value="12">Güzellik ve Moda</option>
-                                <option value="13">İlişkiler</option>
-                                <option value="14">İş ve Ticaret</option>
-                                <option value="15">Kişisel Gelişim</option>
-                                <option value="16">Lifestyle</option>
-                                <option value="17">Pazarlama</option>
-                                <option value="18">Politika</option>
-                                <option value="19">Pop Kültür</option>
-                                <option value="20">Psikoloji</option>
-                                <option value="21">Sağlık</option>
-                                <option value="22">Seyahat</option>
-                                <option value="23">Spor</option>
-                                <option value="24">Tasarım ve Geliştirme</option>
-                                <option value="25">Teknoloji</option>
-                                <option value="26">Workout Önerileri</option>
-                                <option value="27">Yemek-İçecek</option>
-                                <option value="28">Yerel Haberler</option>
-                            </select>
-                            <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" style="width:100%; height:150vh;"></textarea>
-                            <button type="button" class="btn btn-primary" onclick="" style="margin-left: auto; margin-right: auto; display: block">Control</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+        <%- include("./common/textEdittingScope") %>
+        
+        
 
         <!-- Contact Section -->
         <!--<div class="w3-container w3-padding-32" id="contact">

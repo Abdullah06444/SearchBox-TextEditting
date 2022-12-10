@@ -12,6 +12,12 @@ parameter.setLoadIndexesFromFile(true);
 parameter.setPhraseIndex(false);
 parameter.setNGramIndex(false);
 
+// let path1 = __dirname + "/../../testCollectionEmpty"
+// let path2 = __dirname + "/../../testCollectionEmpty"
+// let path3 = __dirname + "/../../testCollectionEmpty"
+// let path4 = __dirname + "/../../testCollectionEmpty"
+// let path5 = __dirname + "/../../testCollectionEmpty"
+// let path6 = __dirname + "/../../testCollectionEmpty"
 let path1 = __dirname + "/../../testCollectionHepsiburada";
 let path2 = __dirname + "/../../testCollectionAmazon";
 let path3 = __dirname + "/../../testCollectionN11";
@@ -20,11 +26,22 @@ let path5 = __dirname + "/../../testCollectionTrendyol";
 let path6 = __dirname + "/../../testCollectionGittigidiyor";
 
 let collection1 = new Collection(path1, parameter);
+console.log("1st document index loaded")
+
 let collection2 = new Collection(path2, parameter);
+console.log("2nd document index loaded")
+
 let collection3 = new Collection(path3, parameter);
+console.log("3rd document index loaded")
+
 let collection4 = new Collection(path4, parameter);
+console.log("4th document index loaded")
+
 let collection5 = new Collection(path5, parameter);
+console.log("5th document index loaded")
+
 let collection6 = new Collection(path6, parameter);
+console.log("6th document index loaded")
 
 let searchParameter = new SearchParameter();
 searchParameter.setDocumentsRetrieved(8);
