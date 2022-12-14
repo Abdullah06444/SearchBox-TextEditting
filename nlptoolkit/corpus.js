@@ -1,4 +1,4 @@
-const {Sentence} = require("nlptoolkit-corpus/dist/Sentence");
+const {Sentence} = require("nlptoolkit-corpus/dist/Sentence.js");
 
 class SentenceClass{
 
@@ -7,7 +7,7 @@ class SentenceClass{
      * @param {type string} string 
      * @returns convert from string to sentence
      */
-    sentenceAnalysis(string){
+    createSentence(string){
 
         return new Sentence(string);
     }

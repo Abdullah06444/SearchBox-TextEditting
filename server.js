@@ -19,12 +19,15 @@ initializePassport(passport);
 const getSentence = require("./nlptoolkit/corpus");
 const getInformationRetrieval = require("./nlptoolkit/informationRetrieval");
 const getNGramSpellChecker = require("./nlptoolkit/ngramSpellChecker");
+const getFsmMorphologicalAnalyzer = require("./nlptoolkit/morphologicalAnalysis")
 
 // all definiing variable from assets folder
 // var myCss = { style : fs.readFileSync('./assets/style/style.css','utf-8') };
 const getDashboard = require("./assets/script/dashboardScript");
+const patienceDiff = require("./assets/script/patienceDiff");
+const editTextArea = require("./assets/script/editAnalyze");
 
-
+getFsmMorphologicalAnalyzer().fsmMorphologic();
 
 const storage = require('node-sessionstorage');
 
@@ -91,34 +94,97 @@ app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
     let value = "";
     if(myQuery !== undefined){
         array2 = getNGramSpellChecker().nGramSpellCheckerAnalysis(myQuery);
-        let sentence = getSentence().sentenceAnalysis(array2[1]);
+        let sentence = getSentence().createSentence(array2[1]);
         sentence = getSentence().toCapital(sentence);
         console.log("after : " + sentence.toWords());
         value = sentence.toWords();
     }
 
+    let myDomain = undefined, myTextArea = undefined;
+    //console.log(storage.getItem("myTextAreaBlog"))
+    let array3 = [];
+    if(storage.getItem("myTextAreaBlog") != undefined)
+        array3 = splitLinkAttachment(storage.getItem("myTextAreaBlog").toString());
+    if(array3.length > 0)
+        myDomain = array3[0];
+    if(array3.length > 1)
+        myTextArea = array3[1];
+
     res.render("dashboard", {
 
         userName : req.user.name,
+        myTextArea : myTextArea,
         value : value,
         platform : myPlatform,
         type : myRetrievalType,
         array2 : array2,
         informationRetrieval : getInformationRetrieval(),
-        dashboard : getDashboard()
+        dashboard : getDashboard(),
+        sentence : getSentence(),
+
+        //storageTextAreaBlog : storage.getItem("myTextAreaBlog"),
+        storageWordChanges : storage.getItem("arrayOfWordChanges")
     })
 });
 
 app.get('/users/dashboard2/', checkNotAuthenticated, (req, res) => {
 
-    res.render("dashboard", { 
+    let myQuery = undefined, myPlatform = undefined, myRetrievalType = undefined;
+    //console.log(storage.getItem("mySearchBoxQuery"))
+    let array = [];
+    if(storage.getItem("mySearchBoxQuery") != undefined)
+        array = splitLinkAttachment(storage.getItem("mySearchBoxQuery").toString());
+    if(array.length > 0)
+        myQuery = array[0];
+    if(array.length > 1)
+        myPlatform = array[1];
+    if(array.length > 2)
+        myRetrievalType = array[2];
         
-        userName : req.user.name
-    });
-})
+    // ngram spell checker analysis metotunu cagirip query degistirildi
+    console.log("before : " + myQuery);
+    let array2 = [];
+    let value = "";
+    if(myQuery !== undefined){
+        array2 = getNGramSpellChecker().nGramSpellCheckerAnalysis(myQuery);
+        let sentence = getSentence().createSentence(array2[1]);
+        sentence = getSentence().toCapital(sentence);
+        console.log("after : " + sentence.toWords());
+        value = sentence.toWords();
+    }
+
+    let myDomain = undefined, myTextArea = undefined;
+    //console.log(storage.getItem("myTextAreaBlog"))
+    let array3 = [];
+    if(storage.getItem("myTextAreaBlog") != undefined)
+        array3 = splitLinkAttachment(storage.getItem("myTextAreaBlog").toString());
+    if(array3.length > 0)
+        myDomain = array3[0];
+    if(array3.length > 1)
+        myTextArea = array3[1];
+
+    res.render("dashboard", {
+
+        userName : req.user.name,
+        myTextArea : myTextArea,
+        value : value,
+        platform : myPlatform,
+        type : myRetrievalType,
+        array2 : array2,
+        informationRetrieval : getInformationRetrieval(),
+        dashboard : getDashboard(),
+        sentence : getSentence(),
+
+        //storageTextAreaBlog : storage.getItem("myTextAreaBlog"),
+        storageWordChanges : storage.getItem("arrayOfWordChanges")
+    })
+});
 
 app.get('/users/logout', checkNotAuthenticated, (req, res, next) => {
 
+    storage.removeItem("mySearchBoxQuery")
+    storage.removeItem("myTextAreaBlog")
+    storage.removeItem("arrayOfWordChanges")
     req.logout(function(err) {
         if (err) { return next(err); }
         req.flash("success_msg", "You have logged out");
@@ -212,7 +278,7 @@ app.post("/users/dashboard", (req, res, next) => {
     } else {
 
         let searchBoxQuery = "query=" + myQuery + ":platform=" + myPlatform + ":type=" + myRetrievalType;
-        if(req.body.myQuery !== '') myQuery = req.body.myQuery;
+        //if(req.body.myQuery !== '') myQuery = req.body.myQuery;
         storage.setItem("mySearchBoxQuery", searchBoxQuery)
         
         res.redirect("/users/dashboard/");
@@ -239,13 +305,33 @@ app.post("/users/dashboard2", (req, res) => {
 
     } else {
 
+        let temp = storage.getItem("myTextAreaBlog") // previous value
+
         let textAreaBlog = "domain=" + myDomain + ":text=" + myTextArea;
-        if(req.body.myQuery !== '') myQuery = req.body.myQuery;
-        storage.setItem("myTextAreaBlog", textAreaBlog)
+        storage.setItem("myTextAreaBlog", textAreaBlog) // current value
+
+        //let difference1 = patienceDiff(temp, storage.getItem("myTextAreaBlog"))
+        //console.log(difference1.lines)
         
-        console.log("girmiş => " + storage.getItem("myTextAreaBlog"))
-        
+        // active this method in every iteration and take the textarea messages
+        let array = getNGramSpellChecker().nGramSpellCheckerAnalysis(myTextArea);
+        if(array.length > 1){
+
+            console.log({ message : array[0] })
+            console.log({ message : array[1] })
+            let difference2 = patienceDiff(array[0].split(""),(array[1]+" ").split(""))
+            //console.log(difference2.lines)
+
+            let array2 = editTextArea(difference2.lines)
+            storage.setItem("arrayOfWordChanges", array2)
+        }
+
         //res.redirect("/users/dashboard/");
+        
+        // res.render("dashboard", { 
+        //     userName : req.user.name,
+        //     storage : myTextArea
+        // });
     }
 });
 
@@ -288,22 +374,27 @@ function splitLinkAttachment(sessionStorageItem){
     return array;
 }
 
-function getTextArea(){
+/**
+ * 
+ * @param {type string} array 
+ */
+function differences(array){
 
-    //var document = new Document();
-    // prevent refresh page when click type="submit" button
-    document.ready(function(){
-        document.getElementsByClassName("btn btn-primary").click(function(event){
-            event.preventDefault();
-        });
-    });
+    if(array.length > 1){
 
-    let textArea = document.getElementById("myTextArea")
-    document.onkeydown = function(e){
-        e = e || window.event;
-        var key = e.UIEvent.which || e.KeyboardEvent.keyCode;
-        if(key === 32){
-            console.log(textArea.value);
+        if(array[0] !== array[1]){
+
+            //for(let i = 0; i < array[0].length && i < array[1].length; i++){
+
+                let sentence0 = getSentence().createSentence(array[0]);
+                let sentence1 = getSentence().createSentence(array[1]);
+
+                if(sentence0.getWord(sentence0.wordCount()-1).getName() !== sentence1.getWord(sentence1.wordCount()-1).getName()){
+
+                    console.log("before = " + sentence0.getWord(sentence0.wordCount()-1).getName())
+                    console.log("after = " + sentence1.getWord(sentence1.wordCount()-1).getName())
+                }
+            //}
         }
     }
 }

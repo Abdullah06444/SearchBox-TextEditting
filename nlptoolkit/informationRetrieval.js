@@ -12,18 +12,18 @@ parameter.setLoadIndexesFromFile(true);
 parameter.setPhraseIndex(false);
 parameter.setNGramIndex(false);
 
-// let path1 = __dirname + "/../../testCollectionEmpty"
-// let path2 = __dirname + "/../../testCollectionEmpty"
-// let path3 = __dirname + "/../../testCollectionEmpty"
-// let path4 = __dirname + "/../../testCollectionEmpty"
-// let path5 = __dirname + "/../../testCollectionEmpty"
-// let path6 = __dirname + "/../../testCollectionEmpty"
-let path1 = __dirname + "/../../testCollectionHepsiburada";
+let path1 = __dirname + "/../../testCollectionEmpty"
+//let path2 = __dirname + "/../../testCollectionEmpty"
+let path3 = __dirname + "/../../testCollectionEmpty"
+let path4 = __dirname + "/../../testCollectionEmpty"
+let path5 = __dirname + "/../../testCollectionEmpty"
+let path6 = __dirname + "/../../testCollectionEmpty"
+// let path1 = __dirname + "/../../testCollectionHepsiburada";
 let path2 = __dirname + "/../../testCollectionAmazon";
-let path3 = __dirname + "/../../testCollectionN11";
-let path4 = __dirname + "/../../testCollectionCiceksepeti";
-let path5 = __dirname + "/../../testCollectionTrendyol";
-let path6 = __dirname + "/../../testCollectionGittigidiyor";
+// let path3 = __dirname + "/../../testCollectionN11";
+// let path4 = __dirname + "/../../testCollectionCiceksepeti";
+// let path5 = __dirname + "/../../testCollectionTrendyol";
+// let path6 = __dirname + "/../../testCollectionGittigidiyor";
 
 let collection1 = new Collection(path1, parameter);
 console.log("1st document index loaded")

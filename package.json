@@ -1,11 +1,11 @@
 {
-  "name": "searchbox2",
+  "name": "searchbox_texteditting",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node --max-old-space-size=10240 server.js",
+    "dev": "nodemon --max-old-space-size=10240 server.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "nlptoolkit-corpus": "^1.0.9",
     "nlptoolkit-datastructure": "^1.0.4",
     "nlptoolkit-deasciifier": "^1.0.3",
+    "nlptoolkit-dictionary": "^1.0.11",
     "nlptoolkit-informationretrieval": "^1.0.6",
     "nlptoolkit-morphologicalanalysis": "^1.0.9",
     "nlptoolkit-morphologicaldisambiguation": "^1.0.1",

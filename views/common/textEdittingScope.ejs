@@ -2,7 +2,7 @@
     <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16">Text Editting</h3>
 </div>
 
-<div class="w3-row-padding w3-grayscale transition-fade">
+<div class="w3-row-padding transition-fade">
     <ul>
         <% if (typeof errors != 'undefined') { %>
             <% errors.forEach(error => { %>
@@ -11,7 +11,8 @@
         <% } %>
     </ul>
     <form action="/users/dashboard2" id="textAreaForm" method="post"
-    onkeyup="if(event.keyCode == 32) this.submit(); return false;">
+    onkeyup="if(event.keyCode === 32 || event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 13
+            || event.keyCode === 190 || event.keyCode === 188 || event.keyCode === 49 || event.keyCode === 223) this.submit(); return false;">
         <div class="row height d-flex justify-content-center align-items-center">
             <div class="col-md-8">
                 <div class="search">
@@ -47,11 +48,31 @@
                         <option value="27">Yemek-İçecek</option>
                         <option value="28">Yerel Haberler</option>
                     </select>
-                    <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" style="width: 100%; height: 10vh;"></textarea>
-                    <button type="submit" class="btn btn-primary" onclick="" style="margin-left: auto; margin-right: auto; display: block">Control</button>
-                    <% if(typeof storage != 'undefined'){ %>
-                        <div id="textResult"><%= storage %></div>
-                    <% } %>
+                    <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" 
+                    style="width: 100%; height: 10vh;"><% if(typeof myTextArea != 'undefined'){ %><%= myTextArea %><% } %></textarea>
+                    <div style="margin: 35px;">
+                    <% 
+                    if(typeof storageWordChanges != 'undefined'){ 
+                        if(storageWordChanges.length > 0){ 
+                            for(let i = 0; i < storageWordChanges.length; i++){
+                                if(storageWordChanges[i].status === "editted"){%><span
+                                    id="span<%=i%>"
+                                    onmouseover="displayEditWord(<%=i%>,'<%-storageWordChanges[i].editWord%>')"
+                                    onmouseout="displayWord(<%=i%>,'<%-storageWordChanges[i].word%>')"
+                                    style="text-decoration-line: underline;
+                                    text-decoration-style: wavy;
+                                    text-decoration-color: rgb(255, 0, 0);"><%= storageWordChanges[i].word %></span><%} 
+                                else{
+                                    %><%= storageWordChanges[i].word %><%
+                                }
+                                %><%= " " %><%
+                            }
+                        }
+                    } 
+                    %>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="location.reload();" style="margin-left: auto; margin-right: auto; display: block">Control</button>
+                    <button type="button" class="btn btn-primary" onclick="autoFill();" style="margin-left: auto; margin-right: auto; display: block">Autofill</button>
                 </div>
             </div>
         </div>
@@ -60,16 +81,35 @@
 
 <script>
 
-    // document.onkeyup = function(e){
+    <% if(typeof storageWordChanges != 'undefined'){ %>
+        
+        function displayEditWord(count,value){
 
-    //     e = e || window.event;
-    //     var key = e.which || e.keyCode;
-    //     if(key === 32){
+            console.log(value)
+            document.getElementById("span"+count).innerHTML = value
+        }
+        function displayWord(count,value){
 
-    //         console.log(document.getElementById("myTextArea").value);
-    //         sessionStorage.setItem("text",document.getElementById("myTextArea").value)
+            document.getElementById("span"+count).innerHTML = value
+        }
+    <% } %>
 
-    //         document.getElementById("textResult").innerHTML = textResult;
-   
-    // }
+    function autoFill(){
+
+        <% 
+        var text = "";
+        if(typeof storageWordChanges != 'undefined'){ 
+            if(storageWordChanges.length > 0){ 
+                for(let i = 0; i < storageWordChanges.length; i++){
+                    text += storageWordChanges[i].editWord + " "
+                }
+            }
+        }
+        %>
+
+        let auto = '<%- text %>'
+
+        document.getElementById("myTextArea").innerHTML = auto
+    }
+    
 </script>

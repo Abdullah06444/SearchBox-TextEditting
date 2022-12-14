@@ -5,6 +5,8 @@ javascript
 node_modules
 turkish_dictionary.txt
 turkish_misspellings.txt
+turkish_dictionaryOLD.txt
+turkish_misspellingsOLD.txt
 turkish_morphological_lexicon.txt
 turkish_finite_state_machine.xml
 hepsiburada distinct.txt

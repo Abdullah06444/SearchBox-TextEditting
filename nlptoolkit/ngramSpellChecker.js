@@ -5,12 +5,18 @@ const { NGram } = require('nlptoolkit-ngram/dist/NGram');
 const { NoSmoothing } = require('nlptoolkit-ngram/dist/NoSmoothing');
 const { NGramSpellChecker } = require('nlptoolkit-spellchecker/dist/NGramSpellChecker');
 const { SpellCheckerParameter } = require('nlptoolkit-spellchecker/dist/SpellCheckerParameter');
-const { Sentence } = require('nlptoolkit-corpus/dist/Sentence');
+const { TxtDictionary } = require('nlptoolkit-dictionary/dist/Dictionary/TxtDictionary');
+const WordComparator_1 = require("nlptoolkit-dictionary/dist/Dictionary/WordComparator");
+const getSentence = require("./corpus");
+
+
 
 'use strict';
 var fs = require('fs');
 let turkishSplitter = new TurkishSplitter();
-let fsmMorphologicalAnalyzer = new FsmMorphologicalAnalyzer();
+let txtDictionary = new TxtDictionary(WordComparator_1.WordComparator.TURKISH,
+    "turkish_dictionary.txt","turkish_misspellings.txt","turkish_morphological_lexicon.txt");
+let fsmMorphologicalAnalyzer = new FsmMorphologicalAnalyzer("turkish_finite_state_machine.xml",txtDictionary,100000);
 let nGram = new NGram("root_ngram.txt".toString());
 let deasciifier = new NGramDeasciifier(fsmMorphologicalAnalyzer, nGram);
 nGram.calculateNGramProbabilitiesSimple(new NoSmoothing());
@@ -40,13 +46,36 @@ class NGramSpellCheckerClass{
         string2 = string2.toLocaleLowerCase('tr');
         array.push(string2);
         // control deascifier class before analyze
-        let sentence = deasciifier.deasciify(new Sentence(string2));
+        let sentence = deasciifier.deasciify(getSentence().createSentence(string2));
         // analyze with ngram spell checker
         string2 = nGramSpellChecker.spellCheck(sentence).toWords();
         array.push(string2);
 
         return array;
     }
+
+    /*nGramSpellCheckerAnalysis(domain, string){
+
+        let array = [];
+
+        string = string.toString().replace("="," ");
+        string = string.toString().replace("{"," ");
+        string = string.toString().replace("}"," ");
+
+        // split all words
+        let string2 = "";
+        turkishSplitter.split(string).forEach(i => string2 = string2 + i.toWords() + " ");
+        // get lower case all letters
+        string2 = string2.toLocaleLowerCase('tr');
+        array.push(string2);
+        // control deascifier class before analyze
+        let sentence = deasciifier.deasciify(getSentence().createSentence(string2));
+        // analyze with ngram spell checker
+        string2 = nGramSpellChecker.spellCheck(sentence).toWords();
+        array.push(string2);
+
+        return array;
+    }*/
 }
 
 function getNGramSpellChecker(){

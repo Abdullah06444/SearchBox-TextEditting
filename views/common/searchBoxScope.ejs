@@ -3,9 +3,12 @@
 </div>
 
 <!-- get all cases method before display the user interface because of calculating the query time -->
-<% var array = dashboard.allRetrievalTypeCases(value, platform, type) %>
+<% var array = [] %>
+<% if(typeof dashboard != 'undefined'){ %>
+    <% array = dashboard.allRetrievalTypeCases(value, platform, type) %>
+<% } %>
 
-<div class="w3-row-padding w3-grayscale">
+<div class="w3-row-padding">
     <ul>
         <% if (typeof errors != 'undefined') { %>
             <% errors.forEach(error => { %>
@@ -50,10 +53,11 @@
                     <button type="submit" class="btn btn-primary" onclick="">Search</button>
                 </div>
                 <!-- display calculating tne query time -->
-                <p class="w3-light-grey w3-block" style="text-align: center"><%= informationRetrieval.getTime() %> miliseconds</p>
-                <% if(array2.length > 0){ %>
+                <% if(typeof informationRetrieval != 'undefined'){ %>
+                    <p class="w3-light-grey w3-block" style="text-align: center"><%= informationRetrieval.getTime() %> miliseconds</p>
+                <% } if(typeof array2 != 'undefined' && array2.length > 0){ %>
                     <p class="w3-opacity" style="text-align: center">before the analyze => <%= array2[0] %></p>
-                <% } if(array2.length > 1){ %>
+                <% } if(typeof array2 != 'undefined' && array2.length > 1){ %>
                     <p style="text-align: center">after the analyze => <%= array2[1] %></p>
                 <% } %>
             </div>
@@ -80,7 +84,10 @@
     <!-- <% if(array.length > 0){ %>
          <p><button class="w3-button w3-light-grey w3-block">Load More</button></p>
          <% } %> -->
-<!-- <script type="text/javascript">
-document.getElementById("image").innerHTML = "dashboard.getArrayOfProductInfo(array[0], platform)"
-</script> -->
+    <script type="text/javascript">
+        //  if(typeof dashboard != 'undefined'){ 
+        //     let value = dashboard.getArrayOfProductInfo(array[0], platform)
+        //     document.getElementById("image").innerHTML = value
+        //  } 
+    </script>
 </div>
