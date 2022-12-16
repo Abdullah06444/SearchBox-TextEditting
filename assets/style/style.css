@@ -102,6 +102,19 @@
         text-overflow: ellipsis; 
         border: 1px solid rgba(60, 60, 60, 0.2);
     }
+
+    div.myContentEditableBox{
+
+        height: 100vh; 
+        margin: 35px; 
+        border-style: solid; 
+        border-width: thick; 
+        border-color: lightblue;
+    }
+
+
+
+
     .fa:hover {
         opacity: 0.7;
     }

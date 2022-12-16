@@ -10,12 +10,32 @@
             <% }) %>
         <% } %>
     </ul>
-    <form action="/users/dashboard2" id="textAreaForm" method="post"
-    onkeyup="if(event.keyCode === 32 || event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 13
-            || event.keyCode === 190 || event.keyCode === 188 || event.keyCode === 49 || event.keyCode === 223) this.submit(); return false;">
-        <div class="row height d-flex justify-content-center align-items-center">
-            <div class="col-md-8">
-                <div class="search">
+
+    <div class="row height d-flex justify-content-center align-items-center">
+        <div class="col-md-8">
+            <div class="search">
+                <div id="myContentEditableBox" class="myContentEditableBox" placeholder="Text Box" contenteditable="true">
+                    <% 
+                    if(typeof storageWordChanges != 'undefined'){ 
+                        if(storageWordChanges.length > 0){ 
+                            for(let i = 0; i < storageWordChanges.length; i++){
+                                if(storageWordChanges[i].status === "editted"){%><span
+                                    id="span<%=i%>"
+                                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                    title="<%=storageWordChanges[i].editWord%>"
+                                    style="text-decoration-line: underline;
+                                    text-decoration-style: wavy;
+                                    text-decoration-color: rgb(255, 0, 0);"><%= storageWordChanges[i].word %></span><%} 
+                                else{
+                                    %><%= storageWordChanges[i].word %><%
+                                }
+                                %><%= " " %><%
+                            }
+                        }
+                    } 
+                    %>
+                </div>
+                <form action="/users/dashboard2" id="textAreaForm" method="post">
                     <select class="btn btn-primary" id="myDomain" name="myDomain" 
                     style="margin-left: auto; margin-right: auto; display: block;">
                         <!-- <option value="0">Select Domain</option> -->
@@ -48,35 +68,14 @@
                         <option value="27">Yemek-İçecek</option>
                         <option value="28">Yerel Haberler</option>
                     </select>
-                    <textarea type="text" id="myTextArea" name="myTextArea" placeholder="Text Box" 
-                    style="width: 100%; height: 10vh;"><% if(typeof myTextArea != 'undefined'){ %><%= myTextArea %><% } %></textarea>
-                    <div style="margin: 35px;">
-                    <% 
-                    if(typeof storageWordChanges != 'undefined'){ 
-                        if(storageWordChanges.length > 0){ 
-                            for(let i = 0; i < storageWordChanges.length; i++){
-                                if(storageWordChanges[i].status === "editted"){%><span
-                                    id="span<%=i%>"
-                                    onmouseover="displayEditWord(<%=i%>,'<%-storageWordChanges[i].editWord%>')"
-                                    onmouseout="displayWord(<%=i%>,'<%-storageWordChanges[i].word%>')"
-                                    style="text-decoration-line: underline;
-                                    text-decoration-style: wavy;
-                                    text-decoration-color: rgb(255, 0, 0);"><%= storageWordChanges[i].word %></span><%} 
-                                else{
-                                    %><%= storageWordChanges[i].word %><%
-                                }
-                                %><%= " " %><%
-                            }
-                        }
-                    } 
-                    %>
-                    </div>
+                    <input type="text" id="myTextArea" name="myTextArea" hidden></input>
+                    <button type="submit" id="submitButton" hidden></button>
                     <button type="button" class="btn btn-primary" onclick="location.reload();" style="margin-left: auto; margin-right: auto; display: block">Control</button>
-                    <button type="button" class="btn btn-primary" onclick="autoFill();" style="margin-left: auto; margin-right: auto; display: block">Autofill</button>
-                </div>
+                    <!-- <button type="button" class="btn btn-primary" onclick="autoFill();" style="margin-left: auto; margin-right: auto; display: block">Autofill</button> -->
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 <script>
@@ -94,6 +93,7 @@
         }
     <% } %>
 
+    //otomatik düzeltme şeklinde update edersin sonra
     function autoFill(){
 
         <% 
@@ -111,5 +111,18 @@
 
         document.getElementById("myTextArea").innerHTML = auto
     }
+
+    document.body.onkeyup = function(event){
+
+        if(event.keyCode === 32 || event.keyCode === 8 || event.keyCode === 9 || event.keyCode === 13
+        || event.keyCode === 190 || event.keyCode === 188 || event.keyCode === 49 || event.keyCode === 223){
+
+            document.getElementById("myContentEditableBox").addEventListener("click", transferText())
+            document.getElementById("submitButton").form.submit()
+        }
+    }
     
+    function transferText(){
+        document.getElementById("myTextArea").value = document.getElementById("myContentEditableBox").innerText
+    }
 </script>

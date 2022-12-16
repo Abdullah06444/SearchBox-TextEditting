@@ -79,7 +79,7 @@ app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
     let myQuery = undefined, myPlatform = undefined, myRetrievalType = undefined;
     //console.log(storage.getItem("mySearchBoxQuery"))
     let array = [];
-    if(storage.getItem("mySearchBoxQuery") != undefined)
+    if(storage.getItem("mySearchBoxQuery") !== undefined)
         array = splitLinkAttachment(storage.getItem("mySearchBoxQuery").toString());
     if(array.length > 0)
         myQuery = array[0];
@@ -103,7 +103,7 @@ app.get('/users/dashboard/', checkNotAuthenticated, (req, res) => {
     let myDomain = undefined, myTextArea = undefined;
     //console.log(storage.getItem("myTextAreaBlog"))
     let array3 = [];
-    if(storage.getItem("myTextAreaBlog") != undefined)
+    if(storage.getItem("myTextAreaBlog") !== undefined)
         array3 = splitLinkAttachment(storage.getItem("myTextAreaBlog").toString());
     if(array3.length > 0)
         myDomain = array3[0];
@@ -132,7 +132,7 @@ app.get('/users/dashboard2/', checkNotAuthenticated, (req, res) => {
     let myQuery = undefined, myPlatform = undefined, myRetrievalType = undefined;
     //console.log(storage.getItem("mySearchBoxQuery"))
     let array = [];
-    if(storage.getItem("mySearchBoxQuery") != undefined)
+    if(storage.getItem("mySearchBoxQuery") !== undefined)
         array = splitLinkAttachment(storage.getItem("mySearchBoxQuery").toString());
     if(array.length > 0)
         myQuery = array[0];
@@ -156,7 +156,7 @@ app.get('/users/dashboard2/', checkNotAuthenticated, (req, res) => {
     let myDomain = undefined, myTextArea = undefined;
     //console.log(storage.getItem("myTextAreaBlog"))
     let array3 = [];
-    if(storage.getItem("myTextAreaBlog") != undefined)
+    if(storage.getItem("myTextAreaBlog") !== undefined)
         array3 = splitLinkAttachment(storage.getItem("myTextAreaBlog").toString());
     if(array3.length > 0)
         myDomain = array3[0];
@@ -314,7 +314,10 @@ app.post("/users/dashboard2", (req, res) => {
         //console.log(difference1.lines)
         
         // active this method in every iteration and take the textarea messages
-        let array = getNGramSpellChecker().nGramSpellCheckerAnalysis(myTextArea);
+        let array = []
+        if(myTextArea !== undefined){
+           array = getNGramSpellChecker().nGramSpellCheckerAnalysis(myTextArea);
+        }
         if(array.length > 1){
 
             console.log({ message : array[0] })

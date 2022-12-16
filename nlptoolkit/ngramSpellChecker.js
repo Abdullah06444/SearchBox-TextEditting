@@ -15,8 +15,9 @@ const getSentence = require("./corpus");
 var fs = require('fs');
 let turkishSplitter = new TurkishSplitter();
 let txtDictionary = new TxtDictionary(WordComparator_1.WordComparator.TURKISH,
-    "turkish_dictionary.txt","turkish_misspellings.txt","turkish_morphological_lexicon.txt");
+    "turkish_dictionaryOLD.txt","turkish_misspellings.txt","turkish_morphological_lexicon.txt");
 let fsmMorphologicalAnalyzer = new FsmMorphologicalAnalyzer("turkish_finite_state_machine.xml",txtDictionary,100000);
+//let fsmMorphologicalAnalyzer = new FsmMorphologicalAnalyzer();
 let nGram = new NGram("root_ngram.txt".toString());
 let deasciifier = new NGramDeasciifier(fsmMorphologicalAnalyzer, nGram);
 nGram.calculateNGramProbabilitiesSimple(new NoSmoothing());
